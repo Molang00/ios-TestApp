@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class ViewController: UIViewController {
     @IBOutlet weak var mainLabel: UILabel!
@@ -16,7 +17,7 @@ class ViewController: UIViewController {
     
     @IBAction func setText(_ sender: UIButton) {
         if sender.isEqual(mainButton){
-            mainLabel.text = "success"
+            callCurrentTime()
         } else {
             mainLabel.text = "fail"
         }
@@ -36,8 +37,19 @@ class ViewController: UIViewController {
         view.addSubview(mainLabel2)
         mainLabel2.backgroundColor = UIColor.green
         
-        sleep(1)
         mainLabel2.text = "hi"
+    }
+    
+    func callCurrentTime() {
+        AF.request("https://google.com").responseString() { response in
+            switch response.result {
+            case .success:
+                self.mainLabel.text = try! response.result.get()
+            case .failure(let error):
+                print(error)
+                return
+            }
+        }
     }
 
 
